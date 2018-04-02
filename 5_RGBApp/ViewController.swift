@@ -19,6 +19,8 @@ class ViewController: UIViewController {
     //色の表示をテストするためのラベル
     @IBOutlet weak var colorCodeLabel: UILabel!
     
+    @IBOutlet weak var colorTableView: UITableView!
+    
     //rのカラーコード
     var rCode:Float = 1.0
     //gのカラーコード
@@ -34,7 +36,7 @@ class ViewController: UIViewController {
         //コードの数値をLabelに反映する
         rLabel.text = "R:\(Int(rCode))"
         //テストラベルに背景を反映する
-        colorChange()
+        labelChange()
     }
     
     //Gスライダーの動作
@@ -44,7 +46,7 @@ class ViewController: UIViewController {
         //コードの数値をLabelに反映する
         gLabel.text = "G:\(Int(gCode))"
         //テストラベルに背景を反映する
-        colorChange()
+        labelChange()
     }
 
     //Bスライダーの動作
@@ -54,20 +56,21 @@ class ViewController: UIViewController {
         //コードの数値をLabelに反映する
         bLabel.text = "B:\(Int(bCode))"
         //テストラベルに背景を反映する
-        colorChange()
+        labelChange()
     }
     
     
-    //ラベルを変更する
-    func colorChange() {
+    //ラベルの色と文字を変更する
+    func labelChange() {
+        //背景色を変更する（不要）
         colorCodeLabel.backgroundColor = UIColor(red: CGFloat(rCode)/255.0, green: CGFloat(gCode)/255.0, blue: CGFloat(bCode)/255.0, alpha: 1.0)
-        
+        //RGBを16進数に変更する
         let colorCode:String = String(NSString(format: "%02x%02x%02x", Int(rCode), Int(gCode), Int(bCode))).uppercased()
-        
-        print(colorCode)
-        
+        //ラベルのテキストを変更する
         colorCodeLabel.text = "RGB value is #" + colorCode
     }
+    
+    
     
     
     override func viewDidLoad() {
