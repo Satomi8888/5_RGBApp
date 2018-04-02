@@ -16,21 +16,57 @@ class ViewController: UIViewController {
     @IBOutlet weak var gLabel: UILabel!
     //Bのラベル
     @IBOutlet weak var bLabel: UILabel!
+    //色の表示をテストするためのラベル
+    @IBOutlet weak var colorCodeLabel: UILabel!
     
+    //rのカラーコード
+    var rCode:Float = 1.0
+    //gのカラーコード
+    var gCode:Float = 1.0
+    //bのカラーコード
+    var bCode:Float = 1.0
+
     
     //Rスライダーの動作
     @IBAction func rSliderAction(_ sender: UISlider) {
-        rLabel.text = "R:\(Int(sender.value))"
+        //コードの数値を変数に入れる
+        rCode = sender.value
+        //コードの数値をLabelに反映する
+        rLabel.text = "R:\(Int(rCode))"
+        //テストラベルに背景を反映する
+        colorChange()
     }
     
     //Gスライダーの動作
     @IBAction func gSliderAction(_ sender: UISlider) {
-        gLabel.text = "G:\(Int(sender.value))"
+        //コードの数値を変数に入れる
+        gCode = sender.value
+        //コードの数値をLabelに反映する
+        gLabel.text = "G:\(Int(gCode))"
+        //テストラベルに背景を反映する
+        colorChange()
     }
 
     //Bスライダーの動作
     @IBAction func bSliderAction(_ sender: UISlider) {
-        bLabel.text = "B:\(Int(sender.value))"
+        //コードの数値を変数に入れる
+        bCode = sender.value
+        //コードの数値をLabelに反映する
+        bLabel.text = "B:\(Int(bCode))"
+        //テストラベルに背景を反映する
+        colorChange()
+    }
+    
+    
+    //ラベルを変更する
+    func colorChange() {
+        colorCodeLabel.backgroundColor = UIColor(red: CGFloat(rCode)/255.0, green: CGFloat(gCode)/255.0, blue: CGFloat(bCode)/255.0, alpha: 1.0)
+        
+        let colorCode:String = String(NSString(format: "%02x%02x%02x", Int(rCode), Int(gCode), Int(bCode))).uppercased()
+        
+        print(colorCode)
+        
+        colorCodeLabel.text = "RGB value is #" + colorCode
     }
     
     
@@ -38,7 +74,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
     }
 
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
