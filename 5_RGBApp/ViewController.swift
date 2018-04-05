@@ -8,8 +8,8 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, UITableViewDataSource,  UITableViewDelegate {
+    
     //Rのラベル
     @IBOutlet weak var rLabel: UILabel!
     //Gのラベル
@@ -18,15 +18,16 @@ class ViewController: UIViewController {
     @IBOutlet weak var bLabel: UILabel!
     //色の表示をテストするためのラベル
     @IBOutlet weak var colorCodeLabel: UILabel!
-    
+    //色を表示するテーブル
     @IBOutlet weak var colorTableView: UITableView!
-    
     //rのカラーコード
     var rCode:Float = 1.0
     //gのカラーコード
     var gCode:Float = 1.0
     //bのカラーコード
     var bCode:Float = 1.0
+    //スライダーで指定したカラーコード
+    var colorCode:String = ""
 
     
     //Rスライダーの動作
@@ -65,16 +66,33 @@ class ViewController: UIViewController {
         //背景色を変更する（不要）
         colorCodeLabel.backgroundColor = UIColor(red: CGFloat(rCode)/255.0, green: CGFloat(gCode)/255.0, blue: CGFloat(bCode)/255.0, alpha: 1.0)
         //RGBを16進数に変更する
-        let colorCode:String = String(NSString(format: "%02x%02x%02x", Int(rCode), Int(gCode), Int(bCode))).uppercased()
+        colorCode = String(NSString(format: "%02x%02x%02x", Int(rCode), Int(gCode), Int(bCode))).uppercased()
         //ラベルのテキストを変更する
         colorCodeLabel.text = "RGB value is #" + colorCode
+        //テーブルを更新する
+        colorTableView.reloadData()
     }
     
+    //テーブルビュー
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //セルの数を指定
+        return 15
+    }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "colorTableViewCell", for: indexPath)
+        
+        cell.backgroundColor = UIColor(red: CGFloat(rCode)/255.0, green: CGFloat(gCode)/255.0, blue: CGFloat(bCode)/255.0, alpha: 1.0)
+        cell.textLabel?.text = colorCode
+        return cell
+    }
+
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        colorTableView.delegate = self
+        colorTableView.dataSource = self
     }
 
     override func didReceiveMemoryWarning() {
