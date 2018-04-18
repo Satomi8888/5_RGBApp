@@ -20,49 +20,41 @@ class ViewController: UIViewController, UITableViewDataSource,  UITableViewDeleg
     @IBOutlet weak var colorCodeLabel: UILabel!
     //色を表示するテーブル
     @IBOutlet weak var colorTableView: UITableView!
-    //rのカラーコード
-    var rCode:Int = 0
-    //gのカラーコード
-    var gCode:Int = 0
-    //bのカラーコード
-    var bCode:Int = 0
 
     
     //Rスライダーの動作
     @IBAction func rSliderAction(_ sender: UISlider) {
-        //コードの数値を変数に入れる
-        rCode = Int(sender.value)
-        //コードの数値をLabelに反映する
-        rLabel.text = "R:\(rCode)"
-        //テストラベルにカラーコードを反映する
-        labelChange()
+        //スライダーラベルに値を反映する
+        changeSliderLabel(code: sender.value, sliderLabel: rLabel)
+        //メインラベルにカラーコードを反映する
+        changeMainLabel()
     }
     
     //Gスライダーの動作
     @IBAction func gSliderAction(_ sender: UISlider) {
-        //コードの数値を変数に入れる
-        gCode = Int(sender.value)
-        //コードの数値をLabelに反映する
-        gLabel.text = "G:\(gCode)"
-        //テストラベルにカラーコードを反映する
-        labelChange()
+        //スライダーラベルに値を反映する
+        changeSliderLabel(code: sender.value, sliderLabel: gLabel)
+        //メインラベルにカラーコードを反映する
+        changeMainLabel()
     }
 
     //Bスライダーの動作
     @IBAction func bSliderAction(_ sender: UISlider) {
-        //コードの数値を変数に入れる
-        bCode = Int(sender.value)
-        //コードの数値をLabelに反映する
-        bLabel.text = "B:\(bCode)"
-        //テストラベルにカラーコードを反映する
-        labelChange()
+        //スライダーラベルに値を反映する
+        changeSliderLabel(code: sender.value, sliderLabel: bLabel)
+        //メインラベルにカラーコードを反映する
+        changeMainLabel()
     }
     
+    //スライダーラベルを変更する
+    func changeSliderLabel(code:Float, sliderLabel:UILabel) {
+        sliderLabel.text = String(Int(code))
+    }
     
-    //ラベルの色と文字を変更する
-    func labelChange() {
+    //メインラベルを変更する
+    func changeMainLabel() {
         //RGBを16進数に変更する
-        let colorCode = String(NSString(format: "%02x%02x%02x", rCode,gCode,bCode)).uppercased()
+        let colorCode = String(NSString(format: "%02x%02x%02x", Int(rLabel.text!)!,Int(gLabel.text!)!,Int(bLabel.text!)!)).uppercased()
         //ラベルのテキストを変更する
         colorCodeLabel.text = "RGB value is #" + colorCode
         //テーブルを更新する
@@ -79,9 +71,9 @@ class ViewController: UIViewController, UITableViewDataSource,  UITableViewDeleg
         let cell = tableView.dequeueReusableCell(withIdentifier: "colorTableViewCell", for: indexPath)
         
         //各セルのRGBの値
-        var cellRCode = rCode
-        var cellGCode = gCode
-        var cellBCode = bCode
+        var cellRCode = Int(rLabel.text!)!
+        var cellGCode = Int(gLabel.text!)!
+        var cellBCode = Int(bLabel.text!)!
         
         //セルごとにコードを変更する
         switch indexPath.row {
