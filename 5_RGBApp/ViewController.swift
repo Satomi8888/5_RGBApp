@@ -16,11 +16,16 @@ class ViewController: UIViewController, UITableViewDataSource,  UITableViewDeleg
     @IBOutlet weak var gLabel: UILabel!
     //Bのラベル
     @IBOutlet weak var bLabel: UILabel!
-    //色の表示をテストするためのラベル
+    //選択した色を表示ラベル
     @IBOutlet weak var colorCodeLabel: UILabel!
     //色を表示するテーブル
     @IBOutlet weak var colorTableView: UITableView!
-
+    //セルのカラーバリエーションの範囲を指定する配列
+    let numArray:[Int] = [-20,-10,10,20]
+    //セルのカラーバリエーションのRGBを指定する配列
+    let colorArray:[String] = ["red","green","blue"]
+    //セルの行数
+    var totalCell:Int = 0
     
     //Rスライダーの動作
     @IBAction func rSliderAction(_ sender: UISlider) {
@@ -64,47 +69,35 @@ class ViewController: UIViewController, UITableViewDataSource,  UITableViewDeleg
     //テーブルビュー
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //セルの数を指定
-        return 13
+        totalCell = numArray.count * colorArray.count + 1
+        return totalCell
     }
     
+    //テーブルビューのセルを描画する
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "colorTableViewCell", for: indexPath)
         
-        //各セルのRGBの値
+        //テーブルで各セルのRGBを変動させるための変数
         var cellRCode = Int(rLabel.text!)!
         var cellGCode = Int(gLabel.text!)!
         var cellBCode = Int(bLabel.text!)!
         
-        //セルごとにコードを変更する
-        switch indexPath.row {
-        case 1:
-            cellRCode = checkColorCodeNumber(cellRCode - 20)
-        case 2:
-            cellRCode = checkColorCodeNumber(cellRCode - 10)
-        case 3:
-            cellRCode = checkColorCodeNumber(cellRCode + 10)
-        case 4:
-            cellRCode = checkColorCodeNumber(cellRCode + 20)
-        case 5:
-            cellGCode = checkColorCodeNumber(cellGCode - 20)
-        case 6:
-            cellGCode = checkColorCodeNumber(cellGCode - 10)
-        case 7:
-            cellGCode = checkColorCodeNumber(cellGCode + 10)
-        case 8:
-            cellGCode = checkColorCodeNumber(cellGCode + 20)
-        case 9:
-            cellBCode = checkColorCodeNumber(cellBCode - 20)
-        case 10:
-            cellBCode = checkColorCodeNumber(cellBCode - 10)
-        case 11:
-            cellBCode = checkColorCodeNumber(cellBCode + 10)
-        case 12:
-            cellBCode = checkColorCodeNumber(cellBCode + 20)
-        default:
-            break
+        var cellColorArray:Dictionary = ["red":cellRCode, "green":cellGCode, "blue":cellBCode]
+        
+        //セルごとの変更する値を取得する
+        if indexPath.row > 0 {
+            //RGBと変動値を指定する
+            let numArrayNumber = (indexPath.row - 1) % numArray.count
+            let colorArrayNumber = (indexPath.row - 1) / numArray.count
+            //該当するRGBの値を変更する
+            cellColorArray[colorArray[colorArrayNumber]] = checkColorCodeNumber(cellColorArray[colorArray[colorArrayNumber]]! + numArray[numArrayNumber])
         }
         
+        //変更した値を各セルのRGBを指定する変数に入れる
+        cellRCode = cellColorArray["red"]!
+        cellGCode = cellColorArray["green"]!
+        cellBCode = cellColorArray["blue"]!
+
         //セルの背景色を変更する
         cell.backgroundColor = UIColor(red: CGFloat(cellRCode)/255.0, green: CGFloat(cellGCode)/255.0, blue: CGFloat(cellBCode)/255.0, alpha: 1.0)
        //セルにカラーコードを表示する
@@ -112,7 +105,6 @@ class ViewController: UIViewController, UITableViewDataSource,  UITableViewDeleg
         return cell
     }
 
-    
     //RGBの数値が0〜255の範囲にする
     func checkColorCodeNumber(_ num:Int) -> Int {
         if num > 255 {
